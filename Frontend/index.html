@@ -4,38 +4,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="stylesheet.css">
-  <title>DB Project 1 new</title>
+  <title>User Registration</title>
 </head>
 <body>
   <main>
-      <label>Name:</label>
-      <input type="text" id="name-input">
-      <button id="add-name-btn">Add Name</button>
- 
-     <br><br><br>
-     <div> 
-        <input placeholder="search by name" id="search-input">
-        <button id="search-btn">Search</button>
-     </div>
-
-
-     <table id="table">
-         <thead>
-             <th>Id</th>
-             <th>Name</th>
-             <th>Date Added</th>
-             <th>Delete</th>
-             <th>Edit</th>  
-         </thead>
-         <tbody></tbody>
-     </table>
-
-     <section hidden id="update-row">
-         <label>Name:</label>
-         <input type="text" id="update-name-input">
-         <button id="update-row-btn" value="">Update</button>
-    </section>
-</main>
-<script src="index.js"></script>
+    <h2>Register</h2>
+    <form id="register-form">
+      <label>Username:</label>
+      <input type="text" id="username" name="username" required>
+      <br><br>
+      <label>Password:</label>
+      <input type="password" id="password" name="password" required>
+      <br><br>
+      <button type="submit">Register</button>
+    </form>    
+  </main>
+  <script>
+    const form = document.getElementById('register-form');
+  
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // stop the browser from doing a normal form POST
+  
+      const username = form.username.value;
+      const password = form.password.value;
+  
+      if (username.trim() === "" || password.trim() === "") {
+        alert("Username and password are required");
+        return;
+      }
+  
+      try {
+        const response = await fetch("http://localhost:5050/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          alert("Registration successful!");
+          window.location.href = "names.html"; //success == names.html
+        } else {
+          alert("Registration failed: " + (data.error || "Unknown error"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error connecting to server");
+      }
+    });
+  </script>
+  
+  
 </body>
 </html>
