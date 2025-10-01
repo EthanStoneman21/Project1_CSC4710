@@ -143,3 +143,25 @@ app.listen(5050,
         console.log("I am listening on the fixed port 5050.")
     }
 );
+
+//register
+app.post('/register', async(request, response) => {
+        const {username, password} = request.body;
+
+        //validation
+        if(!username || !password) {
+            return response.status(400).json({error: "Username and password are required"});
+        }
+
+        try {
+            const db = dbService.getDbServiceInstance();
+
+            //secure db function
+            const result = await db.registerUser(username, password);
+
+            response.json({success: true, userId: result.insertId});
+        } catch (err) {
+            console.error(err);
+            response.status(500).json({error: "Database error"});
+    }
+});

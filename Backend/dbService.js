@@ -2,6 +2,7 @@
 
 const mysql = require('mysql');
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
 dotenv.config(); // read from .env file
 
 let instance = null; 
@@ -206,6 +207,22 @@ class DbService{
          console.log(error);
       }
   }
+
+   async registerUser(username, password) {
+         try {
+            const hashedPassword = await bcrypt.hash(password, 10); // hash the password with a salt round of 10
+            return new Promise((resolve, reject) => {
+            const query = "INSERT INTO users (username, password) VALUES (?, ?);";
+            connection.query(query, [username, hashedPassword], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+         });
+      } catch (err){
+            throw err;
+      }
+   }
+
 }
 
 module.exports = DbService;
