@@ -165,3 +165,29 @@ app.post('/register', async(request, response) => {
             response.status(500).json({error: "Database error"});
     }
 });
+
+//login
+app.post('/login', async(request, response) => {
+    const {username, password} = request.body;
+
+    //validation
+    if(!username || !password) {
+        return response.status(400).json({error: "Username and password are required"});
+    }
+
+    try {
+        const db = dbService.getDbServiceInstance();
+        const result = await db.loginUser(username, password);
+
+        if (result.success) {
+            response.status(200).json(result); //success
+        }
+        else {
+            response.status(401).json.json(result); //failure
+        }
+    }catch (err) {
+            console.error(err);
+            response.status(500).json({error: "error logging in"});
+        }
+    }
+);
