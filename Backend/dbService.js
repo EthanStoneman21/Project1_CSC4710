@@ -208,21 +208,59 @@ class DbService{
       }
   }
 
-   async registerUser(username, password) {
-         try {
-            const hashedPassword = await bcrypt.hash(password, 10); // hash the password with a salt round of 10
-            return new Promise((resolve, reject) => {
-            const query = "INSERT INTO users (username, password) VALUES (?, ?);";
-            connection.query(query, [username, hashedPassword], (err, result) => {
-                if (err) reject(err);
-                else resolve(result);
-            });
-         });
-      } catch (err){
-            throw err;
-      }
+  async registerUser(username, password) {
+   try {
+     const hashedPassword = await bcrypt.hash(password, 10);
+ 
+     const result = await new Promise((resolve, reject) => {
+       const query = "INSERT INTO users (username, password) VALUES (?, ?);";
+       connection.query(query, [username, hashedPassword], (err, result) => {
+         if (err) reject(err);
+         else resolve(result);
+       });
+     });
+ 
+     return { success: true, message: "User registered successfully", result };
+   } catch (err) {
+     console.error("Register error:", err);
+     return { success: false, message: "Registration failed", error: err };
    }
+ }
 
+   async loginUser(username, password) {
+         try {
+            const user = await new Promise((resolve, reject) => {
+               const query = "SELECT * FROM users WHERE username = ?;";
+               connection.query(query, [username], (err, results) => {
+                     if (err) reject (err);
+                     else if (results.length === 0) resolve(null); // login failed
+                     else resolve(results[0]); //user object
+               });
+            });
+
+            if (!user) return {success: false, message: "User not found"};
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return {success: false, message: "incorrect password"};
+
+            return {
+               success: true,
+               message: "login successful",
+               user: {
+                  username: user.username,
+                  firstname: user.firstname,
+                  lastname: user.lastname,
+                  age: user.age,
+                  salary: user.salary,
+                  registerday: user.registerday,
+                  signintime: user.signintime
+               }
+            };
+
+         } catch (err) {
+            console.log(err);
+            return {success: false, message: "An error occurred during login"};
+         }
+   }
 }
-
 module.exports = DbService;
