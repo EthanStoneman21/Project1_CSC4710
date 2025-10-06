@@ -208,59 +208,74 @@ class DbService{
       }
   }
 
-  async registerUser(username, password) {
+  async registerUser(username, password, firstname, lastname, age, salary) {
    try {
      const hashedPassword = await bcrypt.hash(password, 10);
  
      const result = await new Promise((resolve, reject) => {
-       const query = "INSERT INTO users (username, password) VALUES (?, ?);";
-       connection.query(query, [username, hashedPassword], (err, result) => {
+       const query = `
+         INSERT INTO users (username, password, firstname, lastname, age, salary)
+         VALUES (?, ?, ?, ?, ?, ?);
+       `;
+       connection.query(
+         query,
+         [username, hashedPassword, firstname, lastname, age, salary],
+         (err, result) => {
+           if (err) reject(err);
+           else resolve(result);
+         }
+       );
+     });
+ 
+     return result;
+   } catch (err) {
+     console.error("Register error:", err);
+     throw err;
+   }
+ } 
+
+ async loginUser(username, password) {
+   try {
+     const user = await new Promise((resolve, reject) => {
+       const query = "SELECT * FROM users WHERE username = ?;";
+       connection.query(query, [username], (err, results) => {
          if (err) reject(err);
-         else resolve(result);
+         else if (results.length === 0) resolve(null);
+         else resolve(results[0]);
        });
      });
  
-     return { success: true, message: "User registered successfully", result };
+     if (!user) return { success: false, message: "User not found" };
+ 
+     const isMatch = await bcrypt.compare(password, user.password);
+     if (!isMatch) return { success: false, message: "Incorrect password" };
+ 
+     // Optionally update signintime
+     await new Promise((resolve, reject) => {
+       const query = "UPDATE users SET signintime = NOW() WHERE username = ?;";
+       connection.query(query, [username], (err) => {
+         if (err) reject(err);
+         else resolve();
+       });
+     });
+ 
+     return {
+       success: true,
+       message: "Login successful",
+       user: {
+         username: user.username,
+         firstname: user.firstname,
+         lastname: user.lastname,
+         age: user.age,
+         salary: user.salary,
+         registerday: user.registerday,
+         signintime: new Date() // just updated
+       }
+     };
    } catch (err) {
-     console.error("Register error:", err);
-     return { success: false, message: "Registration failed", error: err };
+     console.error("Login error:", err);
+     return { success: false, message: "An error occurred during login" };
    }
  }
-
-   async loginUser(username, password) {
-         try {
-            const user = await new Promise((resolve, reject) => {
-               const query = "SELECT * FROM users WHERE username = ?;";
-               connection.query(query, [username], (err, results) => {
-                     if (err) reject (err);
-                     else if (results.length === 0) resolve(null); // login failed
-                     else resolve(results[0]); //user object
-               });
-            });
-
-            if (!user) return {success: false, message: "User not found"};
-
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) return {success: false, message: "incorrect password"};
-
-            return {
-               success: true,
-               message: "login successful",
-               user: {
-                  username: user.username,
-                  firstname: user.firstname,
-                  lastname: user.lastname,
-                  age: user.age,
-                  salary: user.salary,
-                  registerday: user.registerday,
-                  signintime: user.signintime
-               }
-            };
-
-         } catch (err) {
-            console.log(err);
-            return {success: false, message: "An error occurred during login"};
-         }
-   }
-}
+} 
 module.exports = DbService;
