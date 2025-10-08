@@ -24,16 +24,17 @@ Consider to create the user table using the following CREATE TABLE stmt (feel fr
 
 
 ```SQL
-CREATE TABLE Users(
-   username VARCHAR(50) primary key,
-   password VARCHAR(50), // maybe encrypted or a hash?
-   firstname VARCHAR(50),
-   lastname VARCHAR(50),
-   salary FLOAT,
-   age INTEGER,
-   registerday DATE,
-   signintime DATETIME
-) 
+CREATE TABLE Users (
+  userid INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50),
+  password VARCHAR(255),
+  firstname VARCHAR(50),
+  lastname VARCHAR(50),
+  salary FLOAT,
+  age INT,
+  registerday DATE,
+  signintime DATETIME
+);
 ```
 
 
@@ -74,4 +75,5 @@ Some tips:
 5. In Windows, to kill a process id = 40356, type ```taskkill /F /PID 40356```
 6. Mac uses port 5000 for AirPlay already, so you need to disable it if you want to use the same port, see [this blog](https://www.reddit.com/r/perl/comments/10p8p39/macos_port_5000_mystery_solved/)
    
+
 
