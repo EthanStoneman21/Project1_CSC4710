@@ -68,18 +68,40 @@ app.get('/search/:name', (request, response) => { // we can debug by URL
     .catch(err => console.log(err));
 });
 
+// Search by First Name
+app.get('/search/firstname', (request, response) => {
+    const { firstname } = request.query;
+    console.log("Search firstname:", firstname);
+
+    if (!firstname) return response.status(400).json({ error: "Missing firstname" });
+
+    const db = dbService.getDbServiceInstance();
+    const result = db.searchUsersByFirstname(firstname);
+
+    result
+      .then(data => {
+        console.log("DB returned:", data);
+        response.json({ data });
+      })
+      .catch(err => {
+        console.error("DB error:", err);
+        response.status(500).json({ error: "Server error" });
+      });
+});
+
+  
 
 // update
 app.patch('/update', 
      (request, response) => {
           console.log("app: update is called");
           //console.log(request.body);
-          const{id, name} = request.body;
-          console.log(id);
+          const{userid, name} = request.body;
+          console.log(userid);
           console.log(name);
           const db = dbService.getDbServiceInstance();
 
-          const result = db.updateNameById(id, name);
+          const result = db.updateNameById(userid, name);
 
           result.then(data => response.json({success: true}))
           .catch(err => console.log(err)); 
@@ -88,14 +110,14 @@ app.patch('/update',
 );
 
 // delete service
-app.delete('/delete/:id', 
+app.delete('/delete/:userid', 
      (request, response) => {     
-        const {id} = request.params;
+        const {userid} = request.params;
         console.log("delete");
-        console.log(id);
+        console.log(userid);
         const db = dbService.getDbServiceInstance();
 
-        const result = db.deleteRowById(id);
+        const result = db.deleteRowById(userid);
 
         result.then(data => response.json({success: true}))
         .catch(err => console.log(err));
@@ -127,41 +149,36 @@ app.get('/testdb', (request, response) => {
 });
 
 
-// set up the web server listener
-// if we use .env to configure
-/*
-app.listen(process.env.PORT, 
-    () => {
-        console.log("I am listening on the configured port " + process.env.PORT)
-    }
-);
-*/
-
-// if we configure here directly
-app.listen(5050, 
-    () => {
-        console.log("I am listening on the fixed port 5050.")
-    }
-);
-
 // register
 app.post('/register', async (request, response) => {
     const { username, password, firstname, lastname, age, salary } = request.body;
-  
+
     if (!username || !password) {
-      return response.status(400).json({ error: "Username and password are required" });
+        return response.status(400).json({ error: "Username and password are required" });
     }
-  
+
     try {
-      const db = dbService.getDbServiceInstance();
-      const result = await db.registerUser(username, password, firstname, lastname, age, salary);
-  
-      response.json({ success: true, userId: result.insertId });
+        const db = dbService.getDbServiceInstance();
+        const result = await db.registerUser(username, password, firstname, lastname, age, salary);
+
+        // Fetch the newly registered user's data
+        const newUser = {
+            userid: result.insertId,
+            username,
+            firstname,
+            lastname,
+            age,
+            salary,
+            registerday: new Date().toISOString(), // Current date
+            signintime: null // No sign-in yet
+        };
+
+        response.json({ success: true, user: newUser });
     } catch (err) {
-      console.error(err);
-      response.status(500).json({ error: "Database error" });
+        console.error(err);
+        response.status(500).json({ error: "Database error" });
     }
-  });    
+});
 
 //login
 app.post('/login', async(request, response) => {
@@ -186,5 +203,22 @@ app.post('/login', async(request, response) => {
             console.error(err);
             response.status(500).json({error: "error logging in"});
         }
+    }
+);
+
+// set up the web server listener
+// if we use .env to configure
+/*
+app.listen(process.env.PORT, 
+    () => {
+        console.log("I am listening on the configured port " + process.env.PORT)
+    }
+);
+*/
+
+// if we configure here directly
+app.listen(5050, 
+    () => {
+        console.log("I am listening on the fixed port 5050.")
     }
 );
