@@ -223,8 +223,8 @@ function insertRowIntoTable(data){
       }
    }
 
-   tableHtml +=`<td><button class="delete-row-btn" data-id=${data.id}>Delete</td>`;
-   tableHtml += `<td><button class="edit-row-btn" data-id=${data.id}>Edit</td>`;
+   tableHtml +=`<td><button class="delete-row-btn" data-id=${data.id}>Delete</button></td>`;
+   tableHtml += `<td><button class="edit-row-btn" data-id=${data.id}>Edit</button></td>`;
 
    tableHtml += "</tr>";
 
@@ -241,13 +241,25 @@ function insertRowIntoTable(data){
     }
 }
 
+const searchFirstnameBtn = document.querySelector('#search-firstname-btn');
+searchFirstnameBtn.onclick = function () {
+  const searchInput = document.querySelector('#search-firstname-input');
+  const searchValue = searchInput.value;
+  searchInput.value = "";
+
+  fetch('http://localhost:5050/search/firstname?firstname=' + searchValue)
+    .then(response => response.json())
+    .then(data => loadHTMLTable(data['data']));
+};
+
+
 function loadHTMLTable(data){
     debug("index.js: loadHTMLTable called.");
 
-    const table = document.querySelector('table tbody'); 
+    const table = document.querySelector('#table tbody'); 
     
     if(data.length === 0){
-        table.innerHTML = "<tr><td class='no-data' colspan='5'>No Data</td></tr>";
+        table.innerHTML = "<tr><td class='no-data' colspan='11'>No Data</td></tr>";
         return;
     }
   
@@ -278,15 +290,42 @@ function loadHTMLTable(data){
     */
 
     let tableHtml = "";
-    data.forEach(function ({id, name, date_added}){
-         tableHtml += "<tr>";
-         tableHtml +=`<td>${id}</td>`;
-         tableHtml +=`<td>${name}</td>`;
-         tableHtml +=`<td>${new Date(date_added).toLocaleString()}</td>`;
-         tableHtml +=`<td><button class="delete-row-btn" data-id=${id}>Delete</td>`;
-         tableHtml += `<td><button class="edit-row-btn" data-id=${id}>Edit</td>`;
-         tableHtml += "</tr>";
+    data.forEach(function ({userid, username, password, firstname, lastname, age, salary, registerday, signintime}) {
+        tableHtml += "<tr>";
+        tableHtml += `<td>${userid}</td>`;
+        tableHtml += `<td>${username}</td>`;
+        tableHtml += `<td>${password}</td>`;
+        tableHtml += `<td>${firstname}</td>`;
+        tableHtml += `<td>${lastname}</td>`;
+        tableHtml += `<td>${salary}</td>`;
+        tableHtml += `<td>${age}</td>`;
+        tableHtml += `<td>${new Date(registerday).toLocaleDateString()}</td>`;
+        tableHtml += `<td>${new Date(signintime).toLocaleString()}</td>`;
+        tableHtml += `<td><button class="delete-row-btn" data-userid="${userid}">Delete</button></td>`;
+        tableHtml += `<td><button class="edit-row-btn" data-userid="${userid}">Edit</button></td>`;
+        tableHtml += "</tr>";
     });
 
     table.innerHTML = tableHtml;
+
+document.querySelector('#search-firstname-btn').onclick = function () {
+    const input = document.querySelector('#search-firstname-input');
+    const searchValue = input.value.trim();
+    console.log("Search triggered with:", searchValue); // ✅ Confirm input
+    input.value = "";
+  
+    fetch('http://localhost:5050/search/firstname?firstname=' + encodeURIComponent(searchValue))
+      .then(response => {
+        console.log("Response status:", response.status); // ✅ Confirm response
+        return response.json();
+      })
+      .then(data => {
+        console.log("Data received:", data); // ✅ Confirm data
+        loadHTMLTable(data.data);
+      })
+      .catch(err => {
+        console.error("Search error:", err);
+        loadHTMLTable([]);
+      });
+  };
 }

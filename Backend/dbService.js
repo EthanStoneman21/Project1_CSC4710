@@ -93,7 +93,7 @@ class DbService{
            // use await to call an asynchronous function
            const response = await new Promise((resolve, reject) => 
               {
-                  const query = "SELECT * FROM names;";
+                  const query = "SELECT * FROM users;";
                   connection.query(query, 
                        (err, results) => {
                              if(err) reject(new Error(err.message));
@@ -119,7 +119,7 @@ class DbService{
             // use await to call an asynchronous function
             const insertId = await new Promise((resolve, reject) => 
             {
-               const query = "INSERT INTO names (name, date_added) VALUES (?, ?);";
+               const query = "INSERT INTO users (name, date_added) VALUES (?, ?);";
                connection.query(query, [name, dateAdded], (err, result) => {
                    if(err) reject(new Error(err.message));
                    else resolve(result.insertId);
@@ -145,7 +145,7 @@ class DbService{
              // use await to call an asynchronous function
              const response = await new Promise((resolve, reject) => 
                   {
-                     const query = "SELECT * FROM names where name = ?;";
+                     const query = "SELECT * FROM users where username = ?;";
                      connection.query(query, [name], (err, results) => {
                          if(err) reject(new Error(err.message));
                          else resolve(results);
@@ -167,7 +167,7 @@ class DbService{
               // use await to call an asynchronous function
               const response = await new Promise((resolve, reject) => 
                   {
-                     const query = "DELETE FROM names WHERE id = ?;";
+                     const query = "DELETE FROM users WHERE id = ?;";
                      connection.query(query, [id], (err, result) => {
                           if(err) reject(new Error(err.message));
                           else resolve(result.affectedRows);
@@ -193,7 +193,7 @@ class DbService{
            // use await to call an asynchronous function
            const response = await new Promise((resolve, reject) => 
                {
-                  const query = "UPDATE names SET name = ? WHERE id = ?;";
+                  const query = "UPDATE users SET username = ? WHERE userid = ?;";
                   connection.query(query, [newName, id], (err, result) => {
                        if(err) reject(new Error(err.message));
                        else resolve(result.affectedRows);
@@ -214,8 +214,8 @@ class DbService{
  
      const result = await new Promise((resolve, reject) => {
        const query = `
-         INSERT INTO users (username, password, firstname, lastname, age, salary)
-         VALUES (?, ?, ?, ?, ?, ?);
+         INSERT INTO users (username, password, firstname, lastname, age, salary, registerday, signintime)
+         VALUES (?, ?, ?, ?, ?, ?, CURDATE(), NOW());
        `;
        connection.query(
          query,
@@ -250,7 +250,7 @@ class DbService{
      const isMatch = await bcrypt.compare(password, user.password);
      if (!isMatch) return { success: false, message: "Incorrect password" };
  
-     // Optionally update signintime
+     // update sign in time
      await new Promise((resolve, reject) => {
        const query = "UPDATE users SET signintime = NOW() WHERE username = ?;";
        connection.query(query, [username], (err) => {
@@ -277,5 +277,22 @@ class DbService{
      return { success: false, message: "An error occurred during login" };
    }
  }
+
+ async searchUsersByFirstname(firstname) {
+  try {
+    const results = await new Promise((resolve, reject) => {
+      const query = "SELECT * FROM users WHERE firstname = ?;";
+      connection.query(query, [firstname], (err, results) => {
+        if (err) reject(err);
+        else resolve(results);
+      });
+    });
+    return results;
+  } catch (err) {
+    console.error("Error searching by firstname:", err);
+    throw err;
+  }
+}
+
 } 
 module.exports = DbService;
