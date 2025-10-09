@@ -69,24 +69,23 @@ app.get('/search/:name', (request, response) => { // we can debug by URL
 });
 
 // Search by First Name
-app.get('/search/firstname', (request, response) => {
-    const { firstname } = request.query;
-    console.log("Search firstname:", firstname);
-
-    if (!firstname) return response.status(400).json({ error: "Missing firstname" });
+app.get('/searchf/:firstname', (request, response) => { // we can debug by URL
+    
+    const {firstname} = request.params;
+    
+    console.log(firstname);
 
     const db = dbService.getDbServiceInstance();
-    const result = db.searchUsersByFirstname(firstname);
+
+    let result;
+    if(firstname === "all") // in case we want to search all
+       result = db.getAllData()
+    else 
+       result =  db.searchByFirstName(firstname); // call a DB function
 
     result
-      .then(data => {
-        console.log("DB returned:", data);
-        response.json({ data });
-      })
-      .catch(err => {
-        console.error("DB error:", err);
-        response.status(500).json({ error: "Server error" });
-      });
+    .then(data => response.json({data: data}))
+    .catch(err => console.log(err));
 });
 
   

@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // when the addBtn is clicked
-const addBtn = document.querySelector('#add-name-btn');
+/*const addBtn = document.querySelector('#add-name-btn');
 addBtn.onclick = function (){
     const nameInput = document.querySelector('#name-input');
     const name = nameInput.value;
@@ -88,7 +88,7 @@ addBtn.onclick = function (){
     })
     .then(response => response.json())
     .then(data => insertRowIntoTable(data['data']));
-}
+}*/
 
 // when the searchBtn is clicked
 const searchBtn =  document.querySelector('#search-btn');
@@ -100,6 +100,18 @@ searchBtn.onclick = function (){
     fetch('http://localhost:5050/search/' + searchValue)
     .then(response => response.json())
     .then(data => loadHTMLTable(data['data']));
+}
+
+//when search by firstname button is clicked
+const searchFirstnameBtn = document.querySelector('#search-firstname-btn');
+searchFirstnameBtn.onclick = function () {
+  const searchInput = document.querySelector('#search-firstname-input');
+  const searchValue = searchInput.value;
+  searchInput.value = "";
+
+  fetch('http://localhost:5050/searchf/' + searchValue)
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
 }
 
 let rowToDelete; 
@@ -241,17 +253,6 @@ function insertRowIntoTable(data){
     }
 }
 
-const searchFirstnameBtn = document.querySelector('#search-firstname-btn');
-searchFirstnameBtn.onclick = function () {
-  const searchInput = document.querySelector('#search-firstname-input');
-  const searchValue = searchInput.value;
-  searchInput.value = "";
-
-  fetch('http://localhost:5050/search/firstname?firstname=' + searchValue)
-    .then(response => response.json())
-    .then(data => loadHTMLTable(data['data']));
-};
-
 
 function loadHTMLTable(data){
     debug("index.js: loadHTMLTable called.");
@@ -307,25 +308,4 @@ function loadHTMLTable(data){
     });
 
     table.innerHTML = tableHtml;
-
-document.querySelector('#search-firstname-btn').onclick = function () {
-    const input = document.querySelector('#search-firstname-input');
-    const searchValue = input.value.trim();
-    console.log("Search triggered with:", searchValue); // ✅ Confirm input
-    input.value = "";
-  
-    fetch('http://localhost:5050/search/firstname?firstname=' + encodeURIComponent(searchValue))
-      .then(response => {
-        console.log("Response status:", response.status); // ✅ Confirm response
-        return response.json();
-      })
-      .then(data => {
-        console.log("Data received:", data); // ✅ Confirm data
-        loadHTMLTable(data.data);
-      })
-      .catch(err => {
-        console.error("Search error:", err);
-        loadHTMLTable([]);
-      });
-  };
 }
