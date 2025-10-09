@@ -53,7 +53,7 @@ class DbService{
    /*
      This code defines an asynchronous function getAllData using the async/await syntax. 
      The purpose of this function is to retrieve all data from a database table named 
-     "names" using a SQL query.
+     "users" using a SQL query.
 
      Let's break down the code step by step:
          - async getAllData() {: This line declares an asynchronous function named getAllData.
@@ -82,7 +82,7 @@ class DbService{
     }: Closes the catch block.
 
     In summary, this function performs an asynchronous database query using await and a 
-   Promise to fetch all data from the "names" table. If the query is successful, 
+   Promise to fetch all data from the "users" table. If the query is successful, 
    it returns the results; otherwise, it catches and logs any errors that occur 
    during the process. It's important to note that the await keyword is used here 
    to work with the asynchronous nature of the connection.query method, allowing 
@@ -278,20 +278,25 @@ class DbService{
    }
  }
 
- async searchUsersByFirstname(firstname) {
-  try {
-    const results = await new Promise((resolve, reject) => {
-      const query = "SELECT * FROM users WHERE firstname = ?;";
-      connection.query(query, [firstname], (err, results) => {
-        if (err) reject(err);
-        else resolve(results);
-      });
-    });
-    return results;
-  } catch (err) {
-    console.error("Error searching by firstname:", err);
-    throw err;
-  }
+ async searchByFirstName(firstname){
+  try{
+       // use await to call an asynchronous function
+       const response = await new Promise((resolve, reject) => 
+            {
+               const query = "SELECT * FROM users where firstname = ?;";
+               connection.query(query, [firstname], (err, results) => {
+                   if(err) reject(new Error(err.message));
+                   else resolve(results);
+               });
+            }
+       );
+
+       // console.log(response);  // for debugging to see the result of select
+       return response;
+
+   }  catch(error){
+      console.log(error);
+   }
 }
 
 } 
