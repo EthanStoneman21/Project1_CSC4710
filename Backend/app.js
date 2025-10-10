@@ -88,6 +88,26 @@ app.get('/searchf/:firstname', (request, response) => { // we can debug by URL
     .catch(err => console.log(err));
 });
 
+// Search by userid
+app.get('/searchu/:userid', (request, response) => { // we can debug by URL
+    
+    const {userid} = request.params;
+    
+    console.log(userid);
+
+    const db = dbService.getDbServiceInstance();
+
+    let result;
+    if(userid === "all") // in case we want to search all
+       result = db.getAllData()
+    else 
+       result =  db.searchByFirstName(userid); // call a DB function
+
+    result
+    .then(data => response.json({data: data}))
+    .catch(err => console.log(err));
+});
+
   
 
 // update

@@ -299,5 +299,27 @@ class DbService{
    }
 }
 
+async searchByFirstName(userid){
+   try{
+        // use await to call an asynchronous function
+        const response = await new Promise((resolve, reject) => 
+             {
+                const query = "SELECT * FROM users where userid = ?;";
+                connection.query(query, [userid], (err, results) => {
+                    if(err) reject(new Error(err.message));
+                    else resolve(results);
+                });
+             }
+        );
+ 
+        // console.log(response);  // for debugging to see the result of select
+        return response;
+ 
+    }  catch(error){
+       console.log(error);
+    }
+ }
+ 
+
 } 
 module.exports = DbService;
