@@ -101,7 +101,7 @@ app.get('/searchu/:userid', (request, response) => { // we can debug by URL
     if(userid === "all") // in case we want to search all
        result = db.getAllData()
     else 
-       result =  db.searchByFirstName(userid); // call a DB function
+       result =  db.searchByUserId(userid); // call a DB function
 
     result
     .then(data => response.json({data: data}))

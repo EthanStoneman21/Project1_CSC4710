@@ -299,7 +299,7 @@ class DbService{
    }
 }
 
-async searchByFirstName(userid){
+async searchByUserId(userid){
    try{
         // use await to call an asynchronous function
         const response = await new Promise((resolve, reject) => 
