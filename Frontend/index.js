@@ -71,6 +71,76 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => loadHTMLTable(data['data']));
 });
 
+   // Registration handler
+   const regForm = document.getElementById('register-form');
+   regForm.addEventListener('submit', async (e) => {
+     e.preventDefault();
+     const username = regForm.username.value;
+     const password = regForm.password.value;
+     const firstname = regForm.firstname.value;
+     const lastname = regForm.lastname.value;
+     const age = regForm.age.value;
+     const salary = regForm.salary.value;
+   
+     if (!username || !password) {
+       alert("Username and password are required");
+       return;
+     }
+   
+     try {
+       const response = await fetch("http://localhost:5050/register", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ username, password, firstname, lastname, age, salary })
+       });
+   
+       const data = await response.json();
+       if (data.success === true) {
+         alert("Registration successful! Please log in.");
+         regForm.reset();
+       } else {
+         alert("Registration failed: " + (data.error || "Unknown error"));
+       }
+     } catch (err) {
+       console.error(err);
+       alert("Error connecting to server");
+     }
+   });
+   
+       // Login handler
+       const loginForm = document.getElementById('login-form');
+       loginForm.addEventListener('submit', async (e) => {
+         e.preventDefault();
+         const username = loginForm.username.value;
+         const password = loginForm.password.value;
+   
+         if (!username || !password) {
+           alert("Username and password are required");
+           return;
+         }
+   
+         try {
+           const response = await fetch("http://localhost:5050/login", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ username, password })
+           });
+   
+           const data = await response.json();
+           console.log("Login response:", data);
+   
+           if (data.success === true || data.success === "true") {
+             alert("Login successful!");
+             window.location.assign("./names.html");
+           } else {
+             alert("Login failed: " + (data.message || "Unknown error"));
+           }
+         } catch (err) {
+           console.error(err);
+           alert("Error connecting to server");
+         }
+       });
+
 
 // when the addBtn is clicked
 /*const addBtn = document.querySelector('#add-name-btn');
@@ -110,6 +180,18 @@ searchFirstnameBtn.onclick = function () {
   searchInput.value = "";
 
   fetch('http://localhost:5050/searchf/' + searchValue)
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
+}
+
+//when search by userid is clicked
+const searchFirstnameBtn = document.querySelector('#search-userid-btn');
+searchFirstnameBtn.onclick = function () {
+  const searchInput = document.querySelector('#search-userid-input');
+  const searchValue = searchInput.value;
+  searchInput.value = "";
+
+  fetch('http://localhost:5050/searchu/' + searchValue)
   .then(response => response.json())
   .then(data => loadHTMLTable(data['data']));
 }
