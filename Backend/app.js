@@ -176,6 +176,8 @@ app.post('/register', async (request, response) => {
         return response.status(400).json({ error: "Username and password are required" });
     }
 
+    console.log("Received registration:", request.body);
+
     try {
         const db = dbService.getDbServiceInstance();
         const result = await db.registerUser(username, password, firstname, lastname, age, salary);
