@@ -108,7 +108,43 @@ app.get('/searchu/:userid', (request, response) => { // we can debug by URL
     .catch(err => console.log(err));
 });
 
-  
+  // Search by salary where salary is between x and y inclusively
+app.get('/searchs/:x/:y', (request, response) => { // we can debug by URL
+    
+    const {x, y} = request.params;
+    
+    console.log(x);
+    console.log(y);
+
+    const min = parseFloat(x);
+    const max = parseFloat(y);
+
+    const db = dbService.getDbServiceInstance();
+    result = db.searchSalaries(min, max); // call a DB function
+
+    result
+    .then(data => response.json({data: data}))
+    .catch(err => console.log(err));
+});
+
+  // Search by age where age is between x and y inclusively
+  app.get('/searcha/:x/:y', (request, response) => { // we can debug by URL
+    
+    const {x, y} = request.params;
+    
+    console.log(x);
+    console.log(y);
+
+    const min = parseInt(x);
+    const max = parseInt(y);
+
+    const db = dbService.getDbServiceInstance();
+    result = db.searchAges(min, max); // call a DB function
+
+    result
+    .then(data => response.json({data: data}))
+    .catch(err => console.log(err));
+});
 
 // update
 app.patch('/update', 

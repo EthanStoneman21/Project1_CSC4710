@@ -167,7 +167,7 @@ class DbService{
               // use await to call an asynchronous function
               const response = await new Promise((resolve, reject) => 
                   {
-                     const query = "DELETE FROM users WHERE id = ?;";
+                     const query = "DELETE FROM users WHERE userid = ?;";
                      connection.query(query, [id], (err, result) => {
                           if(err) reject(new Error(err.message));
                           else resolve(result.affectedRows);
@@ -319,7 +319,48 @@ async searchByUserId(userid){
        console.log(error);
     }
  }
+
+ async searchSalaries(x, y){
+   try{
+        // use await to call an asynchronous function
+        const response = await new Promise((resolve, reject) => 
+             {
+                const query = "SELECT * FROM users where salary >= ? AND salary <= ?;";
+                connection.query(query, [x, y], (err, results) => {
+                    if(err) reject(new Error(err.message));
+                    else resolve(results);
+                });
+             }
+        );
  
+        // console.log(response);  // for debugging to see the result of select
+        return response;
+ 
+    }  catch(error){
+       console.log(error);
+    }
+ }
+ 
+ async searchAges(x, y){
+   try{
+        // use await to call an asynchronous function
+        const response = await new Promise((resolve, reject) => 
+             {
+                const query = "SELECT * FROM users where age >= ? AND age <= ?;";
+                connection.query(query, [x, y], (err, results) => {
+                    if(err) reject(new Error(err.message));
+                    else resolve(results);
+                });
+             }
+        );
+ 
+        // console.log(response);  // for debugging to see the result of select
+        return response;
+ 
+    }  catch(error){
+       console.log(error);
+    }
+ }
 
 } 
 module.exports = DbService;
