@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylesheet.css">
   <title>DB Project 1 new</title>
 </head>
 <body>
@@ -23,7 +22,20 @@
      <div>
       <input placeholder="search by user id" id="search-userid-input">
       <button id="search-userid-btn">Search by User ID</button>
-   </div>     
+     </div>     
+
+     <div>
+      <input type = "number" placeholder="Min Salary" id="min-salaries-input">
+      <input type = "number" placeholder="Max Salary" id="max-salaries-input">
+      <button id="search-salaries-btn">Search by Salaries Between X and Y Inclusively</button>
+     </div>
+
+     <div>
+      <input type = "number" placeholder="Min Age" id="min-ages-input">
+      <input type = "number" placeholder="Max Age" id="max-ages-input">
+      <button id="search-ages-btn">Search by Ages Between X and Y Inclusively</button>
+     </div>
+
 
 
      <table id="table">
@@ -49,6 +61,6 @@
          <button id="update-row-btn" value="">Update</button>
     </section>
 </main>
-<script src="index.js"></script>
+<script src="names.js"></script>
 </body>
 </html>
