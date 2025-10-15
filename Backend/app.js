@@ -146,20 +146,32 @@ app.get('/searchs/:x/:y', (request, response) => { // we can debug by URL
     .catch(err => console.log(err));
 });
 
+
 app.get('/searchAfterJohn', async (req, res) => {
     try {
         const db = dbService.getDbServiceInstance();
 
-        // Step 1: get John's userid
         const johnResult = await db.getUserIdByUsername('John');
         if (!johnResult || johnResult.length === 0) {
             return res.status(404).json({ error: "User John not found" });
         }
-
         const johnId = johnResult[0].userid;
-
-        // Step 2: get all users with userid greater than John's
         const result = await db.getUsersAfterId(johnId);
+
+        res.json({ data: result });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
+app.get('/searchSameDayJohn', async (req, res) => {
+    try {
+        const db = dbService.getDbServiceInstance();
+
+        const johnResult = await db.getJohnDate('John');
+        const johnDay = johnResult[0].registerday;
+        const result = await db.getSameDayUsers(johnDay);
 
         res.json({ data: result });
     } catch (err) {

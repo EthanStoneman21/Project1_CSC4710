@@ -99,10 +99,18 @@ searchAgesBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
-//search users made after john clicked
+//search users made after john
 const searchpostJohnBtn = document.querySelector('#search-postJohn-btn');
 searchpostJohnBtn.onclick = function () {
   fetch('http://localhost:5050/searchAfterJohn')
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
+}
+
+//search who registered on the same day as john
+const searchSameDayBtn = document.querySelector('#search-sameDayJohn-btn');
+searchSameDayBtn.onclick = function () {
+  fetch('http://localhost:5050/searchSameDayJohn')
   .then(response => response.json())
   .then(data => loadHTMLTable(data['data']));
 }

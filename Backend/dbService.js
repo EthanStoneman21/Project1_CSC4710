@@ -396,5 +396,39 @@ async getUsersAfterId(userId) {
     }
 }
 
+ // gets John's register date
+async getJohnDate(username) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = "SELECT registerday FROM users WHERE username = ?";
+            connection.query(query, [username], (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+// get users who registered the same day as John
+async getSameDayUsers(registerday) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = "SELECT * FROM users WHERE registerday = ?";
+            connection.query(query, [registerday], (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 } 
 module.exports = DbService;
