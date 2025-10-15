@@ -99,6 +99,14 @@ searchAgesBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
+//search users made after john clicked
+const searchpostJohnBtn = document.querySelector('#search-postJohn-btn');
+searchpostJohnBtn.onclick = function () {
+  fetch('http://localhost:5050/searchAfterJohn')
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
+}
+
 let rowToDelete; 
 
 // when the delete button is clicked, since it is not part of the DOM tree, we need to do it differently

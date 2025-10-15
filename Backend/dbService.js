@@ -362,5 +362,39 @@ async searchByUserId(userid){
     }
  }
 
+ // gets John's userid
+async getUserIdByUsername(username) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = "SELECT userid FROM users WHERE username = ?";
+            connection.query(query, [username], (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+// get users after John
+async getUsersAfterId(userId) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = "SELECT * FROM users WHERE userid > ?";
+            connection.query(query, [userId], (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 } 
 module.exports = DbService;
