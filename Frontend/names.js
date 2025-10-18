@@ -99,10 +99,13 @@ searchAgesBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
-//search users made after john
+//search users made after specified user
 const searchpostJohnBtn = document.querySelector('#search-postJohn-btn');
 searchpostJohnBtn.onclick = function () {
-  fetch('http://localhost:5050/searchAfterJohn')
+const searchInput = document.querySelector('#search-postJohn-input');
+const searchValue = searchInput.value;
+  searchInput.value = "";
+  fetch('http://localhost:5050/searchAfterJohn/' + searchValue)
   .then(response => response.json())
   .then(data => loadHTMLTable(data['data']));
 }
@@ -115,10 +118,13 @@ searchNeverSignedBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
-//search who registered on the same day as john
-const searchSameDayBtn = document.querySelector('#search-sameDayJohn-btn');
+//search who registered on the same day as User
+const searchSameDayBtn = document.querySelector('#search-sameDay-btn');
 searchSameDayBtn.onclick = function () {
-  fetch('http://localhost:5050/searchSameDayJohn')
+  const searchInput = document.querySelector('#search-sameDay-input');
+  const searchValue = searchInput.value;
+  searchInput.value = "";
+  fetch('http://localhost:5050/searchSameDay/' + searchValue)
   .then(response => response.json())
   .then(data => loadHTMLTable(data['data']));
 }

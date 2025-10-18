@@ -362,7 +362,7 @@ async searchByUserId(userid){
     }
  }
 
- // gets John's userid
+ // gets User's userid
 async getUserIdByUsername(username) {
     try {
         const response = await new Promise((resolve, reject) => {
@@ -379,7 +379,7 @@ async getUserIdByUsername(username) {
     }
 }
 
-// get users after John
+// get users after specified user
 async getUsersAfterId(userId) {
     try {
         const response = await new Promise((resolve, reject) => {
@@ -396,7 +396,7 @@ async getUsersAfterId(userId) {
     }
 }
 
- // gets John's register date
+ // gets User's register date
 async getJohnDate(username) {
     try {
         const response = await new Promise((resolve, reject) => {
@@ -413,7 +413,7 @@ async getJohnDate(username) {
     }
 }
 
-// get users who registered the same day as John
+// get users who registered the same day as specified user
 async getSameDayUsers(registerday) {
     try {
         const response = await new Promise((resolve, reject) => {
