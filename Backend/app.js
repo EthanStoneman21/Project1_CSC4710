@@ -191,6 +191,18 @@ app.get('/searchNeverSignedIn', async (req, res) => {
     }
 });
 
+// Search for users who registered today
+app.get('/searchRegisteredToday', async (req, res) => {
+    try {
+        const db = dbService.getDbServiceInstance();
+        const result = await db.getUsersRegisteredToday();
+        res.json({ data: result });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
 
 
 // update

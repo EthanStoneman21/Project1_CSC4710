@@ -446,5 +446,25 @@ async getUsersNeverSignedIn() {
     }
 }
 
+async getUsersRegisteredToday() {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = `
+                SELECT userid, username, firstname, lastname, registerday
+                FROM users
+                WHERE DATE(registerday) = CURDATE()
+            `;
+            connection.query(query, (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 } 
 module.exports = DbService;

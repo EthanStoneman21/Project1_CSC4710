@@ -123,6 +123,14 @@ searchSameDayBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
+//search who registered today
+const searchTodayBtn = document.querySelector('#search-today-btn');
+searchTodayBtn.onclick = function () {
+  fetch('http://localhost:5050/searchRegisteredToday')
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
+}
+
 let rowToDelete; 
 
 // when the delete button is clicked, since it is not part of the DOM tree, we need to do it differently
