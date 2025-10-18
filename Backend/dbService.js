@@ -215,7 +215,7 @@ class DbService{
      const result = await new Promise((resolve, reject) => {
        const query = `
          INSERT INTO users (username, password, firstname, lastname, age, salary, registerday, signintime)
-         VALUES (?, ?, ?, ?, ?, ?, CURDATE(), NOW());
+         VALUES (?, ?, ?, ?, ?, ?, CURDATE(), Null);
        `;
        connection.query(
          query,
@@ -419,6 +419,22 @@ async getSameDayUsers(registerday) {
         const response = await new Promise((resolve, reject) => {
             const query = "SELECT * FROM users WHERE registerday = ?";
             connection.query(query, [registerday], (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+async getUsersNeverSignedIn() {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            const query = "SELECT userid, username, firstname, lastname, registerday FROM users WHERE signintime IS NULL";
+            connection.query(query, (err, results) => {
                 if (err) reject(err);
                 else resolve(results);
             });

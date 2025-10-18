@@ -180,6 +180,18 @@ app.get('/searchSameDayJohn', async (req, res) => {
     }
 });
 
+app.get('/searchNeverSignedIn', async (req, res) => {
+    try {
+        const db = dbService.getDbServiceInstance();
+        const result = await db.getUsersNeverSignedIn();
+        res.json({ data: result });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
+
 
 // update
 app.patch('/update', 

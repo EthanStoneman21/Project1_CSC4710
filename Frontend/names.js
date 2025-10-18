@@ -107,6 +107,14 @@ searchpostJohnBtn.onclick = function () {
   .then(data => loadHTMLTable(data['data']));
 }
 
+//search users who never signed in
+const searchNeverSignedBtn = document.querySelector('#search-neverSigned-btn');
+searchNeverSignedBtn.onclick = function () {
+  fetch('http://localhost:5050/searchNeverSignedIn')
+  .then(response => response.json())
+  .then(data => loadHTMLTable(data['data']));
+}
+
 //search who registered on the same day as john
 const searchSameDayBtn = document.querySelector('#search-sameDayJohn-btn');
 searchSameDayBtn.onclick = function () {
