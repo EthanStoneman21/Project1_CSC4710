@@ -1,25 +1,5 @@
 **Project description**
 
-In this project, you will create a user table and then use it to register a new user and then allows the user to sign into a website. This project will take 4 weeks. 
-
-Watch this video: https://www.youtube.com/watch?v=vrj9AohVhPA
-
-Explanation of the soruce code: [video 1](https://www.youtube.com/watch?v=XBJRBB14ijY), [video 2](https://www.youtube.com/watch?v=MaBphsJLrGY)
-
-Please implement the following interface and functoinalty: 
-1. User registration.
-2. User sign-in, make sure your impelementation is not subject to [SQL injection attack](https://portswigger.net/support/using-sql-injection-to-bypass-authentication). 
-3. search users by first and/or last name.
-4. search users by userid;
-5. search all users whose salary is between X and Y. 
-6. Search all users whose ages are between X and Y.
-7. Search users who registered after john registered, where ```john``` is the userid.
-8. search users who never signed in.
-9. Search users who registered on the same day that john registered. 
-10. Return the users who registered today;
-
-Show and explain the results above in a video. Submit all SQL statements in a file called sql.txt. 
-
 Consider to create the user table using the following CREATE TABLE stmt (feel free to revise it): 
 
 
@@ -36,10 +16,6 @@ CREATE TABLE Users (
   signintime DATETIME
 );
 ```
-
-
-Note: the grading will be based on the correct result of the query, the design of the interface and your explnation skill of the results. 
-doenv is a file that you need to customize and rename it to .env to work.
 
 **How to run the sample code**
 1. We will use the Apache web server. Create the first webpage index.html under ```C:\xampp\htdocs>``` (or similar directory where you installed XAMPP) and point your browser to [http://localhost/index.html](http://localhost/index.html). You should see your first webpage. The purpose of this step is to confirm that the Web server is running, and understand the ROOT URL points to the path location: C:\xampp\htdocs or similar directory in your file system. 
@@ -75,5 +51,6 @@ Some tips:
 5. In Windows, to kill a process id = 40356, type ```taskkill /F /PID 40356```
 6. Mac uses port 5000 for AirPlay already, so you need to disable it if you want to use the same port, see [this blog](https://www.reddit.com/r/perl/comments/10p8p39/macos_port_5000_mystery_solved/)
    
+
 
 
