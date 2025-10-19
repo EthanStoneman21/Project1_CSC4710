@@ -1,7 +1,6 @@
 **Project description**
 
-Consider to create the user table using the following CREATE TABLE stmt (feel free to revise it): 
-
+Consider to create the user table using the following CREATE TABLE stmt:
 
 ```SQL
 CREATE TABLE Users (
@@ -27,6 +26,7 @@ CREATE TABLE Users (
 7. Feel free to access some of the Backend endpoints directly such as [http://localhost:5050/getAll](http://localhost:5050/getAll). You will only receive JSON data without nice rendering. 
 8. Now you can interact with the Frontend.
 ---------------------------------------
+
 
 
 
