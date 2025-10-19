@@ -211,7 +211,6 @@ class DbService{
   async registerUser(username, password, firstname, lastname, age, salary) {
    try {
      const hashedPassword = await bcrypt.hash(password, 10);
- 
      const result = await new Promise((resolve, reject) => {
        const query = `
          INSERT INTO users (username, password, firstname, lastname, age, salary, registerday, signintime)
@@ -433,7 +432,7 @@ async getSameDayUsers(registerday) {
 async getUsersNeverSignedIn() {
     try {
         const response = await new Promise((resolve, reject) => {
-            const query = "SELECT userid, username, firstname, lastname, registerday FROM users WHERE signintime IS NULL";
+            const query = "SELECT * FROM users WHERE signintime IS NULL";
             connection.query(query, (err, results) => {
                 if (err) reject(err);
                 else resolve(results);
@@ -450,7 +449,7 @@ async getUsersRegisteredToday() {
     try {
         const response = await new Promise((resolve, reject) => {
             const query = `
-                SELECT userid, username, firstname, lastname, registerday
+                SELECT *
                 FROM users
                 WHERE DATE(registerday) = CURDATE()
             `;
